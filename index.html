@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cold Email Campaign ROI Modeling</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8fafc;
+            color: #334155;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #1e293b;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #64748b;
+            font-size: 1.1em;
+        }
+
+        .tabs {
+            display: flex;
+            background: white;
+            border-radius: 10px 10px 0 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 0;
+        }
+
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            font-size: 16px;
+            font-weight: 500;
+            color: #64748b;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            color: #3b82f6;
+            border-bottom-color: #3b82f6;
+            background: #f8fafc;
+        }
+
+        .tab:hover {
+            background: #f1f5f9;
+        }
+
+        .sheet {
+            display: none;
+            background: white;
+            border-radius: 0 0 10px 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .sheet.active {
+            display: block;
+        }
+
+        .sheet h2 {
+            color: #1e293b;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .note {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #92400e;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        th, td {
+            border: 1px solid #e2e8f0;
+            padding: 8px 12px;
+            text-align: left;
+        }
+
+        th {
+            background: #f1f5f9;
+            font-weight: 600;
+            color: #374151;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        td {
+            background: white;
+        }
+
+        input {
+            width: 100%;
+            border: none;
+            background: transparent;
+            padding: 4px;
+            font-size: 14px;
+        }
+
+        input:focus {
+            outline: 2px solid #3b82f6;
+            outline-offset: -2px;
+            border-radius: 2px;
+        }
+
+        .editable {
+            background: #fefce8 !important;
+        }
+
+        .calculated {
+            background: #f0f9ff !important;
+            color: #0369a1;
+            font-weight: 500;
+        }
+
+        .high-performance {
+            background: #dcfce7 !important;
+            color: #166534;
+        }
+
+        .low-performance {
+            background: #fee2e2 !important;
+            color: #dc2626;
+        }
+
+        .add-row-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            margin-top: 10px;
+            transition: background 0.2s;
+        }
+
+        .add-row-btn:hover {
+            background: #2563eb;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background: linear-gradient(145deg, #ffffff, #f8fafc);
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .metric-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #1e293b;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            color: #64748b;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .positive {
+            color: #059669 !important;
+        }
+
+        .negative {
+            color: #dc2626 !important;
+        }
+
+        .chart-container {
+            margin: 20px 0;
+            padding: 25px;
+            background: linear-gradient(145deg, #ffffff, #f8fafc);
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid #e2e8f0;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .chart-title {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #1e293b;
+            margin: 0;
+        }
+
+        .chart-subtitle {
+            font-size: 0.9em;
+            color: #64748b;
+            margin-top: 5px;
+        }
+
+        .totals-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .total-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .total-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .total-card.revenue {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            box-shadow: 0 8px 25px rgba(17, 153, 142, 0.3);
+        }
+
+        .total-card h3 {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.9;
+        }
+
+        .total-card .amount {
+            font-size: 2.8em;
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .total-card .description {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+
+        @media (min-width: 1200px) {
+            .charts-grid {
+                grid-template-columns: 2fr 1fr;
+            }
+        }
+
+        .export-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            margin: 10px 10px 0 0;
+            transition: background 0.2s;
+        }
+
+        .bulk-controls {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .bulk-controls h3 {
+            color: #374151;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .bulk-input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .bulk-input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .bulk-input-group label {
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .bulk-input-group input {
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .bulk-apply-btn {
+            background: #7c3aed;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .bulk-apply-btn:hover {
+            background: #6d28d9;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            max-height: 600px;
+            overflow-y: auto;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Cold Email Campaign ROI Modeling</h1>
+            <p>Dynamic analysis and projections for email marketing campaigns</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showSheet('campaign')">Campaign Calculator</button>
+            <button class="tab" onclick="showSheet('investment')">Investment Tracker</button>
+            <button class="tab" onclick="showSheet('dashboard')">ROI Dashboard</button>
+            <button class="tab" onclick="showSheet('visualizations')">Visualizations</button>
+        </div>
+
+        <!-- Campaign Calculator Sheet -->
+        <div id="campaign" class="sheet active">
+            <h2>Campaign Calculator (Week-by-Week Funnel)</h2>
+            <div class="note">
+                📝 Adjust the yellow-highlighted cells to experiment with different scenarios. Use bulk controls for quick adjustments or edit individual cells for precise values.
+            </div>
+            
+            <!-- Bulk Controls -->
+            <div class="bulk-controls">
+                <h3>🎛️ Bulk Adjustment Controls</h3>
+                <div class="bulk-input-grid">
+                    <div class="bulk-input-group">
+                        <label>Response Rate (%)</label>
+                        <input type="number" id="bulkResponseRate" step="0.001" placeholder="e.g., 0.02 for 2%">
+                    </div>
+                    <div class="bulk-input-group">
+                        <label>% Try Product</label>
+                        <input type="number" id="bulkTryRate" step="0.001" placeholder="e.g., 0.3 for 30%">
+                    </div>
+                    <div class="bulk-input-group">
+                        <label>% Buy 40 Credits</label>
+                        <input type="number" id="bulkBuy40Rate" step="0.001" placeholder="e.g., 0.15 for 15%">
+                    </div>
+                    <div class="bulk-input-group">
+                        <label>% Buy 60 Credits</label>
+                        <input type="number" id="bulkBuy60Rate" step="0.001" placeholder="e.g., 0.1 for 10%">
+                    </div>
+                </div>
+                <button class="bulk-apply-btn" onclick="applyBulkRates()">Apply to All Weeks</button>
+            </div>
+            
+            <div class="table-container">
+                <table id="campaignTable">
+                    <thead>
+                        <tr>
+                            <th>Week</th>
+                            <th>Date</th>
+                            <th>Emails Sent</th>
+                            <th>Response Rate (%)</th>
+                            <th>Responses</th>
+                            <th>% Try Product</th>
+                            <th>Triers</th>
+                            <th>% Buy 40 Credits</th>
+                            <th>40 Credit Buyers</th>
+                            <th>40 Credit Revenue</th>
+                            <th>% Buy 60 Credits</th>
+                            <th>60 Credit Buyers</th>
+                            <th>60 Credit Revenue</th>
+                            <th>Total Revenue</th>
+                        </tr>
+                    </thead>
+                    <tbody id="campaignBody">
+                    </tbody>
+                </table>
+            </div>
+            
+            <button class="add-row-btn" onclick="addCampaignRow()">Add Week</button>
+            <button class="export-btn" onclick="exportToCSV('campaign')">Export Campaign CSV</button>
+            <button class="export-btn" onclick="exportFullApplication()">Export All Data</button>
+            <button class="export-btn" onclick="exportSourceCode()">Export HTML File</button>
+        </div>
+
+        <!-- Investment Tracker Sheet -->
+        <div id="investment" class="sheet">
+            <h2>Investment Tracker</h2>
+            <div class="note">
+                💰 Track all campaign-related costs by period. Add new rows for unexpected expenses.
+            </div>
+            
+            <div class="table-container">
+                <table id="investmentTable">
+                    <thead>
+                        <tr>
+                            <th>Period</th>
+                            <th>Instantly Plan Cost</th>
+                            <th>Google Workspace Cost</th>
+                            <th>Domain Cost</th>
+                            <th>Other Costs</th>
+                            <th>Total Investment</th>
+                        </tr>
+                    </thead>
+                    <tbody id="investmentBody">
+                    </tbody>
+                    <tfoot>
+                        <tr style="background: #f1f5f9; font-weight: bold;">
+                            <td>TOTAL CUMULATIVE</td>
+                            <td id="totalInstantly">$0.00</td>
+                            <td id="totalWorkspace">$0.00</td>
+                            <td id="totalDomain">$0.00</td>
+                            <td id="totalOther">$0.00</td>
+                            <td id="totalInvestment">$0.00</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            
+            <button class="add-row-btn" onclick="addInvestmentRow()">Add Period</button>
+            <button class="export-btn" onclick="exportToCSV('investment')">Export Investment CSV</button>
+
+        function exportToCSV(sheetType) {
+            let csvContent = '';
+            let filename = '';
+
+            if (sheetType === 'campaign') {
+                filename = 'campaign_data.csv';
+                csvContent = 'Week,Date,Emails Sent,Response Rate,Responses,Try Rate,Triers,Buy 40 Rate,40 Credit Buyers,40 Credit Revenue,Buy 60 Rate,60 Credit Buyers,60 Credit Revenue,Total Revenue\n';
+                
+                campaignData.forEach(row => {
+                    csvContent += `${row.week},${row.date},${row.emailsSent},${row.responseRate},${row.responses.toFixed(2)},${row.tryRate},${row.triers.toFixed(2)},${row.buy40Rate},${row.buyers40.toFixed(2)},${row.revenue40.toFixed(2)},${row.buy60Rate},${row.buyers60.toFixed(2)},${row.revenue60.toFixed(2)},${row.totalRevenue.toFixed(2)}\n`;
+                });
+            } else if (sheetType === 'investment') {
+                filename = 'investment_data.csv';
+                csvContent = 'Period,Instantly Plan Cost,Google Workspace Cost,Domain Cost,Other Costs,Total Investment\n';
+                
+                investmentData.forEach(row => {
+                    csvContent += `${row.period},${row.instantly.toFixed(2)},${row.workspace.toFixed(2)},${row.domain.toFixed(2)},${row.other.toFixed(2)},${row.total.toFixed(2)}\n`;
+                });
+            }
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            
+            if (link.download !== undefined) {
+                const url = URL.createObjectURL(blob);
+                link.setAttribute('href', url);
+                link.setAttribute('download', filename);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        }
+        </div>
+
+        <!-- ROI Dashboard Sheet -->
+        <div id="dashboard" class="sheet">
+            <h2>ROI Dashboard</h2>
+            <div class="note">
+                📊 Live summary pulling data from Campaign Calculator and Investment Tracker sheets.
+            </div>
+            
+            <div class="dashboard-grid">
+                <div class="metric-card">
+                    <div class="metric-value" id="totalEmailsSent">0</div>
+                    <div class="metric-label">Total Emails Sent</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="totalResponses">0</div>
+                    <div class="metric-label">Total Responses</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="totalTriers">0</div>
+                    <div class="metric-label">Total Triers</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="totalBuyers">0</div>
+                    <div class="metric-label">Total Buyers</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="totalRevenue">$0</div>
+                    <div class="metric-label">Total Revenue</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="totalInvestmentDash">$0</div>
+                    <div class="metric-label">Total Investment</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="netProfit">$0</div>
+                    <div class="metric-label">Net Profit/Loss</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="roiPercent">0%</div>
+                    <div class="metric-label">ROI Percentage</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Visualizations Sheet -->
+        <div id="visualizations" class="sheet">
+            <h2>Visualizations</h2>
+            <div class="note">
+                📈 Modern interactive charts showing campaign performance and trends.
+            </div>
+            
+            <!-- Total Investment vs Revenue Comparison -->
+            <div class="totals-comparison">
+                <div class="total-card investment">
+                    <h3>Total Investment</h3>
+                    <div class="amount" id="totalInvestmentViz">$0</div>
+                    <div class="description">3-month campaign costs</div>
+                </div>
+                <div class="total-card revenue">
+                    <h3>Total Revenue</h3>
+                    <div class="amount" id="totalRevenueViz">$0</div>
+                    <div class="description">Generated from conversions</div>
+                </div>
+            </div>
+            
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <div>
+                            <h3 class="chart-title">Revenue vs Investment Timeline</h3>
+                            <p class="chart-subtitle">Weekly revenue generation compared to monthly investment cycles</p>
+                        </div>
+                    </div>
+                    <canvas id="revenueVsInvestmentChart" width="400" height="250"></canvas>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <div>
+                            <h3 class="chart-title">Conversion Funnel</h3>
+                            <p class="chart-subtitle">Campaign performance at each stage</p>
+                        </div>
+                    </div>
+                    <canvas id="funnelChart" width="400" height="300"></canvas>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart-header">
+                    <div>
+                        <h3 class="chart-title">Cumulative Performance</h3>
+                        <p class="chart-subtitle">Revenue, investment, and profit trends over the 12-week campaign</p>
+                    </div>
+                </div>
+                <canvas id="cumulativeChart" width="400" height="250"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global data storage
+        let campaignData = [];
+        let investmentData = [];
+        let charts = {};
+
+        // Initialize with data from campaign document
+        function initializeData() {
+            // Campaign data based on the document - 12 weeks total (3 months)
+            const campaignWeeks = [
+                // Month 1
+                { week: 1, emails: 250, month: 1 },
+                { week: 2, emails: 500, month: 1 },
+                { week: 3, emails: 1000, month: 1 },
+                { week: 4, emails: 1500, month: 1 },
+                // Month 2
+                { week: 5, emails: 1500, month: 2 },
+                { week: 6, emails: 1500, month: 2 },
+                { week: 7, emails: 1500, month: 2 },
+                { week: 8, emails: 1500, month: 2 },
+                // Month 3
+                { week: 9, emails: 1500, month: 3 },
+                { week: 10, emails: 1500, month: 3 },
+                { week: 11, emails: 1500, month: 3 },
+                { week: 12, emails: 1500, month: 3 }
+            ];
+
+            campaignWeeks.forEach((weekData, index) => {
+                const startDate = new Date();
+                startDate.setDate(startDate.getDate() + index * 7);
+                
+                campaignData.push({
+                    week: weekData.week,
+                    date: startDate.toISOString().split('T')[0],
+                    emailsSent: weekData.emails,
+                    responseRate: 0.02, // 2% from document
+                    responses: 0,
+                    tryRate: 0.3, // Estimated - you can adjust
+                    triers: 0,
+                    buy40Rate: 0.15, // Estimated - you can adjust
+                    buyers40: 0,
+                    revenue40: 0,
+                    buy60Rate: 0.1, // Estimated - you can adjust
+                    buyers60: 0,
+                    revenue60: 0,
+                    totalRevenue: 0
+                });
+            });
+
+            // Investment data based on monthly costs from document
+            const investmentPeriods = [
+                // Month 1 - includes domain setup cost
+                { period: 'Month 1', instantly: 194, workspace: 60, domain: 28, other: 0 },
+                { period: 'Month 2', instantly: 194, workspace: 60, domain: 0, other: 0 },
+                { period: 'Month 3', instantly: 194, workspace: 60, domain: 0, other: 0 }
+            ];
+
+            investmentPeriods.forEach(periodData => {
+                investmentData.push({
+                    period: periodData.period,
+                    instantly: periodData.instantly,
+                    workspace: periodData.workspace,
+                    domain: periodData.domain,
+                    other: periodData.other,
+                    total: 0
+                });
+            });
+        }
+
+        function showSheet(sheetName) {
+            // Hide all sheets
+            document.querySelectorAll('.sheet').forEach(sheet => {
+                sheet.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected sheet
+            document.getElementById(sheetName).classList.add('active');
+            event.target.classList.add('active');
+            
+            // Update visualizations if switching to that tab
+            if (sheetName === 'visualizations') {
+                updateCharts();
+            }
+        }
+
+        function renderCampaignTable() {
+            const tbody = document.getElementById('campaignBody');
+            tbody.innerHTML = '';
+
+            campaignData.forEach((row, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${row.week}</td>
+                    <td><input type="date" class="editable" value="${row.date}" onchange="updateCampaignData(${index}, 'date', this.value)"></td>
+                    <td class="editable"><input type="number" value="${row.emailsSent}" onchange="updateCampaignData(${index}, 'emailsSent', this.value)"></td>
+                    <td class="editable"><input type="number" step="0.001" value="${row.responseRate}" onchange="updateCampaignData(${index}, 'responseRate', this.value)"></td>
+                    <td class="calculated">${Math.round(row.responses)}</td>
+                    <td class="editable"><input type="number" step="0.001" value="${row.tryRate}" onchange="updateCampaignData(${index}, 'tryRate', this.value)"></td>
+                    <td class="calculated">${Math.round(row.triers)}</td>
+                    <td class="editable"><input type="number" step="0.001" value="${row.buy40Rate}" onchange="updateCampaignData(${index}, 'buy40Rate', this.value)"></td>
+                    <td class="calculated">${Math.round(row.buyers40)}</td>
+                    <td class="calculated">$${row.revenue40.toFixed(2)}</td>
+                    <td class="editable"><input type="number" step="0.001" value="${row.buy60Rate}" onchange="updateCampaignData(${index}, 'buy60Rate', this.value)"></td>
+                    <td class="calculated">${Math.round(row.buyers60)}</td>
+                    <td class="calculated">$${row.revenue60.toFixed(2)}</td>
+                    <td class="calculated ${row.totalRevenue > 500 ? 'high-performance' : row.totalRevenue > 0 ? '' : 'low-performance'}">$${row.totalRevenue.toFixed(2)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function renderInvestmentTable() {
+            const tbody = document.getElementById('investmentBody');
+            tbody.innerHTML = '';
+
+            investmentData.forEach((row, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="editable"><input type="text" value="${row.period}" onchange="updateInvestmentData(${index}, 'period', this.value)"></td>
+                    <td class="editable"><input type="number" step="0.01" value="${row.instantly}" onchange="updateInvestmentData(${index}, 'instantly', this.value)"></td>
+                    <td class="editable"><input type="number" step="0.01" value="${row.workspace}" onchange="updateInvestmentData(${index}, 'workspace', this.value)"></td>
+                    <td class="editable"><input type="number" step="0.01" value="${row.domain}" onchange="updateInvestmentData(${index}, 'domain', this.value)"></td>
+                    <td class="editable"><input type="number" step="0.01" value="${row.other}" onchange="updateInvestmentData(${index}, 'other', this.value)"></td>
+                    <td class="calculated">$${row.total.toFixed(2)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            updateInvestmentTotals();
+        }
+
+        function updateCampaignData(index, field, value) {
+            campaignData[index][field] = parseFloat(value) || 0;
+            calculateCampaignRow(index);
+            renderCampaignTable();
+            updateDashboard();
+        }
+
+        function updateInvestmentData(index, field, value) {
+            if (field === 'period') {
+                investmentData[index][field] = value;
+            } else {
+                investmentData[index][field] = parseFloat(value) || 0;
+            }
+            calculateInvestmentRow(index);
+            renderInvestmentTable();
+            updateDashboard();
+        }
+
+        function calculateCampaignRow(index) {
+            const row = campaignData[index];
+            row.responses = row.emailsSent * row.responseRate;
+            row.triers = row.responses * row.tryRate;
+            row.buyers40 = row.triers * row.buy40Rate;
+            row.revenue40 = row.buyers40 * 11.50;
+            row.buyers60 = row.triers * row.buy60Rate;
+            row.revenue60 = row.buyers60 * 14.75;
+            row.totalRevenue = row.revenue40 + row.revenue60;
+        }
+
+        function calculateInvestmentRow(index) {
+            const row = investmentData[index];
+            row.total = row.instantly + row.workspace + row.domain + row.other;
+        }
+
+        function updateInvestmentTotals() {
+            const totals = investmentData.reduce((acc, row) => {
+                acc.instantly += row.instantly;
+                acc.workspace += row.workspace;
+                acc.domain += row.domain;
+                acc.other += row.other;
+                acc.total += row.total;
+                return acc;
+            }, { instantly: 0, workspace: 0, domain: 0, other: 0, total: 0 });
+
+            document.getElementById('totalInstantly').textContent = `$${totals.instantly.toFixed(2)}`;
+            document.getElementById('totalWorkspace').textContent = `$${totals.workspace.toFixed(2)}`;
+            document.getElementById('totalDomain').textContent = `$${totals.domain.toFixed(2)}`;
+            document.getElementById('totalOther').textContent = `$${totals.other.toFixed(2)}`;
+            document.getElementById('totalInvestment').textContent = `$${totals.total.toFixed(2)}`;
+        }
+
+        function updateDashboard() {
+            const totals = campaignData.reduce((acc, row) => {
+                acc.emailsSent += row.emailsSent;
+                acc.responses += row.responses;
+                acc.triers += row.triers;
+                acc.buyers40 += row.buyers40;
+                acc.buyers60 += row.buyers60;
+                acc.revenue += row.totalRevenue;
+                return acc;
+            }, { emailsSent: 0, responses: 0, triers: 0, buyers40: 0, buyers60: 0, revenue: 0 });
+
+            const totalInvestment = investmentData.reduce((sum, row) => sum + row.total, 0);
+            const netProfit = totals.revenue - totalInvestment;
+            const roiPercent = totalInvestment > 0 ? (netProfit / totalInvestment * 100) : 0;
+
+            document.getElementById('totalEmailsSent').textContent = Math.round(totals.emailsSent).toLocaleString();
+            document.getElementById('totalResponses').textContent = Math.round(totals.responses).toLocaleString();
+            document.getElementById('totalTriers').textContent = Math.round(totals.triers).toLocaleString();
+            document.getElementById('totalBuyers').textContent = Math.round(totals.buyers40 + totals.buyers60).toLocaleString();
+            document.getElementById('totalRevenue').textContent = `$${totals.revenue.toFixed(0)}`;
+            document.getElementById('totalInvestmentDash').textContent = `$${totalInvestment.toFixed(0)}`;
+            
+            const netProfitEl = document.getElementById('netProfit');
+            netProfitEl.textContent = `$${netProfit.toFixed(0)}`;
+            netProfitEl.className = `metric-value ${netProfit >= 0 ? 'positive' : 'negative'}`;
+            
+            const roiEl = document.getElementById('roiPercent');
+            roiEl.textContent = `${roiPercent.toFixed(1)}%`;
+            roiEl.className = `metric-value ${roiPercent >= 0 ? 'positive' : 'negative'}`;
+        }
+
+        function addCampaignRow() {
+            const newWeek = campaignData.length + 1;
+            const lastDate = new Date(campaignData[campaignData.length - 1].date);
+            lastDate.setDate(lastDate.getDate() + 7);
+            
+            campaignData.push({
+                week: newWeek,
+                date: lastDate.toISOString().split('T')[0],
+                emailsSent: 0,
+                responseRate: 0.02,
+                responses: 0,
+                tryRate: 0.3,
+                triers: 0,
+                buy40Rate: 0.15,
+                buyers40: 0,
+                revenue40: 0,
+                buy60Rate: 0.1,
+                buyers60: 0,
+                revenue60: 0,
+                totalRevenue: 0
+            });
+            
+            renderCampaignTable();
+            updateDashboard();
+        }
+
+        function addInvestmentRow() {
+            investmentData.push({
+                period: `Period ${investmentData.length + 1}`,
+                instantly: 0,
+                workspace: 0,
+                domain: 0,
+                other: 0,
+                total: 0
+            });
+            
+            renderInvestmentTable();
+            updateDashboard();
+        }
+
+        function updateCharts() {
+            // Destroy existing charts
+            Object.values(charts).forEach(chart => {
+                if (chart) chart.destroy();
+            });
+
+            // Revenue vs Investment Chart - Fixed to show monthly investment properly
+            const weeks = campaignData.map(row => `Week ${row.week}`);
+            const revenues = campaignData.map(row => row.totalRevenue);
+            
+            // Map weekly investment - only show at start of each month (weeks 1, 5, 9)
+            const investments = campaignData.map((row, index) => {
+                const weekNumber = row.week;
+                if (weekNumber === 1 || weekNumber === 5 || weekNumber === 9) {
+                    const monthIndex = Math.floor(index / 4);
+                    return investmentData[monthIndex] ? investmentData[monthIndex].total : 0;
+                } else {
+                    return 0;
+                }
+            });
+
+            const ctx1 = document.getElementById('revenueVsInvestmentChart').getContext('2d');
+            charts.revenueVsInvestment = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: weeks,
+                    datasets: [{
+                        label: 'Revenue',
+                        data: revenues,
+                        backgroundColor: 'rgba(59, 130, 246, 0.8)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 1
+                    }, {
+                        label: 'Investment',
+                        data: investments,
+                        backgroundColor: 'rgba(239, 68, 68, 0.8)',
+                        borderColor: 'rgba(239, 68, 68, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Revenue vs Investment by Week'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function applyBulkRates() {
+            const responseRate = parseFloat(document.getElementById('bulkResponseRate').value);
+            const tryRate = parseFloat(document.getElementById('bulkTryRate').value);
+            const buy40Rate = parseFloat(document.getElementById('bulkBuy40Rate').value);
+            const buy60Rate = parseFloat(document.getElementById('bulkBuy60Rate').value);
+
+            campaignData.forEach((row, index) => {
+                if (!isNaN(responseRate)) row.responseRate = responseRate;
+                if (!isNaN(tryRate)) row.tryRate = tryRate;
+                if (!isNaN(buy40Rate)) row.buy40Rate = buy40Rate;
+                if (!isNaN(buy60Rate)) row.buy60Rate = buy60Rate;
+                
+                calculateCampaignRow(index);
+            });
+
+            renderCampaignTable();
+            updateDashboard();
+
+            // Clear the bulk input fields
+            document.getElementById('bulkResponseRate').value = '';
+            document.getElementById('bulkTryRate').value = '';
+            document.getElementById('bulkBuy40Rate').value = '';
+            document.getElementById('bulkBuy60Rate').value = '';
+        }
+
+        function exportFullApplication() {
+            // Create a complete export of all data
+            const exportData = {
+                campaignData: campaignData,
+                investmentData: investmentData,
+                timestamp: new Date().toISOString(),
+                summary: {
+                    totalEmailsSent: campaignData.reduce((sum, row) => sum + row.emailsSent, 0),
+                    totalResponses: campaignData.reduce((sum, row) => sum + row.responses, 0),
+                    totalRevenue: campaignData.reduce((sum, row) => sum + row.totalRevenue, 0),
+                    totalInvestment: investmentData.reduce((sum, row) => sum + row.total, 0),
+                    netProfit: campaignData.reduce((sum, row) => sum + row.totalRevenue, 0) - investmentData.reduce((sum, row) => sum + row.total, 0)
+                }
+            };
+
+            // Create JSON export
+            const jsonBlob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+            const jsonLink = document.createElement('a');
+            jsonLink.href = URL.createObjectURL(jsonBlob);
+            jsonLink.download = 'cold_email_roi_data.json';
+            jsonLink.click();
+
+            // Create combined CSV export
+            let csvContent = 'CAMPAIGN DATA\n';
+            csvContent += 'Week,Date,Emails Sent,Response Rate,Responses,Try Rate,Triers,Buy 40 Rate,40 Credit Buyers,40 Credit Revenue,Buy 60 Rate,60 Credit Buyers,60 Credit Revenue,Total Revenue\n';
+            
+            campaignData.forEach(row => {
+                csvContent += `${row.week},${row.date},${row.emailsSent},${row.responseRate},${row.responses.toFixed(2)},${row.tryRate},${row.triers.toFixed(2)},${row.buy40Rate},${row.buyers40.toFixed(2)},${row.revenue40.toFixed(2)},${row.buy60Rate},${row.buyers60.toFixed(2)},${row.revenue60.toFixed(2)},${row.totalRevenue.toFixed(2)}\n`;
+            });
+
+            csvContent += '\n\nINVESTMENT DATA\n';
+            csvContent += 'Period,Instantly Plan Cost,Google Workspace Cost,Domain Cost,Other Costs,Total Investment\n';
+            
+            investmentData.forEach(row => {
+                csvContent += `${row.period},${row.instantly.toFixed(2)},${row.workspace.toFixed(2)},${row.domain.toFixed(2)},${row.other.toFixed(2)},${row.total.toFixed(2)}\n`;
+            });
+
+            const csvBlob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const csvLink = document.createElement('a');
+            csvLink.href = URL.createObjectURL(csvBlob);
+            csvLink.download = 'cold_email_roi_complete.csv';
+            csvLink.click();
+        }
+
+        function exportSourceCode() {
+            // Get the complete HTML source
+            const htmlContent = document.documentElement.outerHTML;
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'cold_email_roi_spreadsheet.html';
+            link.click();
+        }
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeData();
+            
+            // Calculate initial values
+            campaignData.forEach((_, index) => calculateCampaignRow(index));
+            investmentData.forEach((_, index) => calculateInvestmentRow(index));
+            
+            // Render all tables
+            renderCampaignTable();
+            renderInvestmentTable();
+            updateDashboard();
+        });
+    </script>
+</body>
+</html>
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Cumulative Revenue Chart - Investment added only at start of each month
+            let cumulativeRevenue = 0;
+            let cumulativeInvestment = 0;
+            const cumulativeData = campaignData.map((row, index) => {
+                cumulativeRevenue += row.totalRevenue;
+                // Add full monthly investment only at weeks 1, 5, and 9
+                const weekNumber = row.week;
+                if (weekNumber === 1 || weekNumber === 5 || weekNumber === 9) {
+                    const monthIndex = Math.floor(index / 4);
+                    if (investmentData[monthIndex]) {
+                        cumulativeInvestment += investmentData[monthIndex].total;
+                    }
+                }
+                return {
+                    week: `Week ${row.week}`,
+                    revenue: cumulativeRevenue,
+                    investment: cumulativeInvestment,
+                    profit: cumulativeRevenue - cumulativeInvestment
+                };
+            });
+
+            const ctx2 = document.getElementById('cumulativeChart').getContext('2d');
+            charts.cumulative = new Chart(ctx2, {
+                type: 'line',
+                data: {
+                    labels: cumulativeData.map(d => d.week),
+                    datasets: [{
+                        label: 'Cumulative Revenue',
+                        data: cumulativeData.map(d => d.revenue),
+                        borderColor: 'rgba(34, 197, 94, 1)',
+                        backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                        tension: 0.4
+                    }, {
+                        label: 'Cumulative Investment',
+                        data: cumulativeData.map(d => d.investment),
+                        borderColor: 'rgba(239, 68, 68, 1)',
+                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                        tension: 0.4
+                    }, {
+                        label: 'Net Profit',
+                        data: cumulativeData.map(d => d.profit),
+                        borderColor: 'rgba(168, 85, 247, 1)',
+                        backgroundColor: 'rgba(168, 85, 247, 0.1)',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Cumulative Performance Over Time'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Funnel Chart
+            const funnelTotals = campaignData.reduce((acc, row) => {
+                acc.emails += row.emailsSent;
+                acc.responses += row.responses;
+                acc.triers += row.triers;
+                acc.buyers += row.buyers40 + row.buyers60;
+                return acc;
+            }, { emails: 0, responses: 0, triers: 0, buyers: 0 });
+
+            const ctx3 = document.getElementById('funnelChart').getContext('2d');
+            charts.funnel = new Chart(ctx3, {
+                type: 'bar',
+                data: {
+                    labels: ['Emails Sent', 'Responses', 'Triers', 'Buyers'],
+                    datasets: [{
+                        label: 'Conversion Funnel',
+                        data: [funnelTotals.emails, funnelTotals.responses, funnelTotals.triers, funnelTotals.buyers],
+                        backgroundColor: [
+                            'rgba(59, 130, 246, 0.8)',
+                            'rgba(34, 197, 94, 0.8)',
+                            'rgba(251, 191, 36, 0.8)',
+                            'rgba(168, 85, 247, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(59, 130, 246, 1)',
+                            'rgba(34, 197, 94, 1)',
+                            'rgba(251, 191, 36, 1)',
+                            'rgba(168, 85, 247, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Campaign Conversion Funnel'
+                        }
+                    },
+                    scales: {
