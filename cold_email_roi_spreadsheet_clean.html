@@ -4,7 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cold Email Campaign ROI Modeling</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js">function exportToCSV(sheetType) {
+            let csvContent = '';
+            let filename = '';
+
+            if (sheetType === 'campaign') {
+                filename = 'campaign_data.csv';
+                csvContent = 'Week,Date,Emails Sent,Response Rate,Responses,Try Rate,Triers,Buy 40 Rate,40 Credit Buyers,40 Credit Revenue,Buy 60 Rate,60 Credit Buyers,60 Credit Revenue,Total Revenue
+';
+                
+                campaignData.forEach(row => {
+                    csvContent += `${row.week},${row.date},${row.emailsSent},${row.responseRate},${row.responses.toFixed(2)},${row.tryRate},${row.triers.toFixed(2)},${row.buy40Rate},${row.buyers40.toFixed(2)},${row.revenue40.toFixed(2)},${row.buy60Rate},${row.buyers60.toFixed(2)},${row.revenue60.toFixed(2)},${row.totalRevenue.toFixed(2)}
+`;
+                }
+</script>
     <style>
         * {
             margin: 0;
@@ -307,10 +320,108 @@
             gap: 25px;
         }
 
-        @media (min-width: 1200px) {
-            .charts-grid {
-                grid-template-columns: 2fr 1fr;
-            }
+        .progress-graphic {
+            background: linear-gradient(145deg, #ffffff, #f8fafc);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid #e2e8f0;
+        }
+
+        .progress-title {
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 25px;
+        }
+
+        .progress-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .progress-item {
+            position: relative;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .progress-bar {
+            height: 20px;
+            background: #f1f5f9;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.8s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill.investment {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .progress-fill.revenue {
+            background: linear-gradient(90deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: progressShine 2s infinite;
+        }
+
+        @keyframes progressShine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .roi-indicator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        .roi-indicator.positive {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            color: #065f46;
+            border: 2px solid #10b981;
+        }
+
+        .roi-indicator.negative {
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+            color: #991b1b;
+            border: 2px solid #ef4444;
+        }
+
+        .roi-indicator.neutral {
+            background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+            color: #374151;
+            border: 2px solid #9ca3af;
         }
 
         .export-btn {
@@ -502,17 +613,7 @@
             <button class="add-row-btn" onclick="addInvestmentRow()">Add Period</button>
             <button class="export-btn" onclick="exportToCSV('investment')">Export Investment CSV</button>
 
-        function exportToCSV(sheetType) {
-            let csvContent = '';
-            let filename = '';
-
-            if (sheetType === 'campaign') {
-                filename = 'campaign_data.csv';
-                csvContent = 'Week,Date,Emails Sent,Response Rate,Responses,Try Rate,Triers,Buy 40 Rate,40 Credit Buyers,40 Credit Revenue,Buy 60 Rate,60 Credit Buyers,60 Credit Revenue,Total Revenue\n';
-                
-                campaignData.forEach(row => {
-                    csvContent += `${row.week},${row.date},${row.emailsSent},${row.responseRate},${row.responses.toFixed(2)},${row.tryRate},${row.triers.toFixed(2)},${row.buy40Rate},${row.buyers40.toFixed(2)},${row.revenue40.toFixed(2)},${row.buy60Rate},${row.buyers60.toFixed(2)},${row.revenue60.toFixed(2)},${row.totalRevenue.toFixed(2)}\n`;
-                });
+        );
             } else if (sheetType === 'investment') {
                 filename = 'investment_data.csv';
                 csvContent = 'Period,Instantly Plan Cost,Google Workspace Cost,Domain Cost,Other Costs,Total Investment\n';
@@ -598,6 +699,34 @@
                     <h3>Total Revenue</h3>
                     <div class="amount" id="totalRevenueViz">$0</div>
                     <div class="description">Generated from conversions</div>
+                </div>
+            </div>
+            
+            <!-- Progress Graphic -->
+            <div class="progress-graphic">
+                <h3 class="progress-title">💰 Investment vs Revenue Progress</h3>
+                <div class="progress-bars">
+                    <div class="progress-item">
+                        <div class="progress-label">
+                            <span>Total Investment</span>
+                            <span id="investmentAmount">$0</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill investment" id="investmentProgress"></div>
+                        </div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-label">
+                            <span>Total Revenue</span>
+                            <span id="revenueAmount">$0</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill revenue" id="revenueProgress"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="roi-indicator" id="roiIndicator">
+                    <span id="roiStatus">Break-even point not reached</span>
                 </div>
             </div>
             
@@ -1045,123 +1174,3 @@
     </script>
 </body>
 </html>
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value) {
-                                    return '$' + value;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-
-            // Cumulative Revenue Chart - Investment added only at start of each month
-            let cumulativeRevenue = 0;
-            let cumulativeInvestment = 0;
-            const cumulativeData = campaignData.map((row, index) => {
-                cumulativeRevenue += row.totalRevenue;
-                // Add full monthly investment only at weeks 1, 5, and 9
-                const weekNumber = row.week;
-                if (weekNumber === 1 || weekNumber === 5 || weekNumber === 9) {
-                    const monthIndex = Math.floor(index / 4);
-                    if (investmentData[monthIndex]) {
-                        cumulativeInvestment += investmentData[monthIndex].total;
-                    }
-                }
-                return {
-                    week: `Week ${row.week}`,
-                    revenue: cumulativeRevenue,
-                    investment: cumulativeInvestment,
-                    profit: cumulativeRevenue - cumulativeInvestment
-                };
-            });
-
-            const ctx2 = document.getElementById('cumulativeChart').getContext('2d');
-            charts.cumulative = new Chart(ctx2, {
-                type: 'line',
-                data: {
-                    labels: cumulativeData.map(d => d.week),
-                    datasets: [{
-                        label: 'Cumulative Revenue',
-                        data: cumulativeData.map(d => d.revenue),
-                        borderColor: 'rgba(34, 197, 94, 1)',
-                        backgroundColor: 'rgba(34, 197, 94, 0.1)',
-                        tension: 0.4
-                    }, {
-                        label: 'Cumulative Investment',
-                        data: cumulativeData.map(d => d.investment),
-                        borderColor: 'rgba(239, 68, 68, 1)',
-                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                        tension: 0.4
-                    }, {
-                        label: 'Net Profit',
-                        data: cumulativeData.map(d => d.profit),
-                        borderColor: 'rgba(168, 85, 247, 1)',
-                        backgroundColor: 'rgba(168, 85, 247, 0.1)',
-                        tension: 0.4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'Cumulative Performance Over Time'
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value) {
-                                    return '$' + value;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-
-            // Funnel Chart
-            const funnelTotals = campaignData.reduce((acc, row) => {
-                acc.emails += row.emailsSent;
-                acc.responses += row.responses;
-                acc.triers += row.triers;
-                acc.buyers += row.buyers40 + row.buyers60;
-                return acc;
-            }, { emails: 0, responses: 0, triers: 0, buyers: 0 });
-
-            const ctx3 = document.getElementById('funnelChart').getContext('2d');
-            charts.funnel = new Chart(ctx3, {
-                type: 'bar',
-                data: {
-                    labels: ['Emails Sent', 'Responses', 'Triers', 'Buyers'],
-                    datasets: [{
-                        label: 'Conversion Funnel',
-                        data: [funnelTotals.emails, funnelTotals.responses, funnelTotals.triers, funnelTotals.buyers],
-                        backgroundColor: [
-                            'rgba(59, 130, 246, 0.8)',
-                            'rgba(34, 197, 94, 0.8)',
-                            'rgba(251, 191, 36, 0.8)',
-                            'rgba(168, 85, 247, 0.8)'
-                        ],
-                        borderColor: [
-                            'rgba(59, 130, 246, 1)',
-                            'rgba(34, 197, 94, 1)',
-                            'rgba(251, 191, 36, 1)',
-                            'rgba(168, 85, 247, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'Campaign Conversion Funnel'
-                        }
-                    },
-                    scales: {
