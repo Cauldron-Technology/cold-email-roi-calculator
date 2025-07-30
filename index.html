@@ -487,10 +487,30 @@
             border: 1px solid #e2e8f0;
         }
 
-        /* Fix specific column widths */
+        /* Column width settings - adjust as needed */
+        #campaignTable th:nth-child(1), /* Week */
+        #campaignTable td:nth-child(1) {
+            min-width: 40px;
+        }
+
+        #campaignTable th:nth-child(2), /* Date */
+        #campaignTable td:nth-child(2) {
+            min-width: 100px;
+        }
+
         #campaignTable th:nth-child(3), /* Emails Sent */
         #campaignTable td:nth-child(3) {
-            min-width: 120px;
+            min-width: 80px;
+        }
+
+        #campaignTable th:nth-child(4), /* Opened Emails Rate */
+        #campaignTable td:nth-child(4) {
+            min-width: 80px;
+        }
+
+        #campaignTable th:nth-child(5), /* Opened Emails */
+        #campaignTable td:nth-child(5) {
+            min-width: 60px;
         }
 
         #campaignTable th:nth-child(6), /* CTA Click Rate */
@@ -498,15 +518,54 @@
             min-width: 75px;
         }
 
-        /* Make table columns resizable */
-        #campaignTable {
-            table-layout: fixed;
+        #campaignTable th:nth-child(7), /* CTA Clicks */
+        #campaignTable td:nth-child(7) {
+            min-width: 75px;
         }
 
-        #campaignTable th,
-        #campaignTable td {
-            resize: horizontal;
-            overflow: auto;
+        #campaignTable th:nth-child(8), /* % Try Product */
+        #campaignTable td:nth-child(8) {
+            min-width: 100px;
+        }
+
+        #campaignTable th:nth-child(9), /* Triers */
+        #campaignTable td:nth-child(9) {
+            min-width: 60px;
+        }
+
+        #campaignTable th:nth-child(10), /* % Buy 40 Credits */
+        #campaignTable td:nth-child(10) {
+            min-width: 100px;
+        }
+
+        #campaignTable th:nth-child(11), /* 40 Credit Buyers */
+        #campaignTable td:nth-child(11) {
+            min-width: 80px;
+        }
+
+        #campaignTable th:nth-child(12), /* 40 Credit Revenue */
+        #campaignTable td:nth-child(12) {
+            min-width: 90px;
+        }
+
+        #campaignTable th:nth-child(13), /* % Buy 60 Credits */
+        #campaignTable td:nth-child(13) {
+            min-width: 80px;
+        }
+
+        #campaignTable th:nth-child(14), /* 60 Credit Buyers */
+        #campaignTable td:nth-child(14) {
+            min-width: 80px;
+        }
+
+        #campaignTable th:nth-child(15), /* 60 Credit Revenue */
+        #campaignTable td:nth-child(15) {
+            min-width: 90px;
+        }
+
+        #campaignTable th:nth-child(16), /* Total Revenue */
+        #campaignTable td:nth-child(16) {
+            min-width: 100px;
         }
     </style>
 </head>
