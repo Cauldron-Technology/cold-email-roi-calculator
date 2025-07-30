@@ -486,6 +486,28 @@
             border-radius: 6px;
             border: 1px solid #e2e8f0;
         }
+
+        /* Fix specific column widths */
+        #campaignTable th:nth-child(3), /* Emails Sent */
+        #campaignTable td:nth-child(3) {
+            min-width: 120px;
+        }
+
+        #campaignTable th:nth-child(6), /* CTA Click Rate */
+        #campaignTable td:nth-child(6) {
+            min-width: 75px;
+        }
+
+        /* Make table columns resizable */
+        #campaignTable {
+            table-layout: fixed;
+        }
+
+        #campaignTable th,
+        #campaignTable td {
+            resize: horizontal;
+            overflow: auto;
+        }
     </style>
 </head>
 <body>
