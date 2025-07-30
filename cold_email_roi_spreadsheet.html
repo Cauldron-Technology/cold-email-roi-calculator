@@ -513,22 +513,26 @@
             <div class="bulk-controls">
                 <h3>🎛️ Bulk Adjustment Controls</h3>
                 <div class="bulk-input-grid">
-                    <div class="bulk-input-group">
-                        <label>Response Rate (%)</label>
-                        <input type="number" id="bulkResponseRate" step="0.001" placeholder="e.g., 0.02 for 2%">
-                    </div>
-                    <div class="bulk-input-group">
-                        <label>% Try Product</label>
-                        <input type="number" id="bulkTryRate" step="0.001" placeholder="e.g., 0.3 for 30%">
-                    </div>
-                    <div class="bulk-input-group">
-                        <label>% Buy 40 Credits</label>
-                        <input type="number" id="bulkBuy40Rate" step="0.001" placeholder="e.g., 0.15 for 15%">
-                    </div>
-                    <div class="bulk-input-group">
-                        <label>% Buy 60 Credits</label>
-                        <input type="number" id="bulkBuy60Rate" step="0.001" placeholder="e.g., 0.1 for 10%">
-                    </div>
+                                    <div class="bulk-input-group">
+                    <label>Opened Emails Rate (%)</label>
+                    <input type="number" id="bulkResponseRate" step="0.001" placeholder="e.g., 0.02 for 2%">
+                </div>
+                <div class="bulk-input-group">
+                    <label>CTA Click Rate (%)</label>
+                    <input type="number" id="bulkCtaClickRate" step="0.001" placeholder="e.g., 0.15 for 15%">
+                </div>
+                <div class="bulk-input-group">
+                    <label>% Try Product</label>
+                    <input type="number" id="bulkTryRate" step="0.001" placeholder="e.g., 0.3 for 30%">
+                </div>
+                <div class="bulk-input-group">
+                    <label>% Buy 40 Credits</label>
+                    <input type="number" id="bulkBuy40Rate" step="0.001" placeholder="e.g., 0.15 for 15%">
+                </div>
+                <div class="bulk-input-group">
+                    <label>% Buy 60 Credits</label>
+                    <input type="number" id="bulkBuy60Rate" step="0.001" placeholder="e.g., 0.1 for 10%">
+                </div>
                 </div>
                 <button class="bulk-apply-btn" onclick="applyBulkRates()">Apply to All Weeks</button>
             </div>
@@ -540,8 +544,10 @@
                             <th>Week</th>
                             <th>Date</th>
                             <th>Emails Sent</th>
-                            <th>Response Rate (%)</th>
-                            <th>Responses</th>
+                            <th>Opened Emails Rate (%)</th>
+                            <th>Opened Emails</th>
+                            <th>CTA Click Rate (%)</th>
+                            <th>CTA Clicks</th>
                             <th>% Try Product</th>
                             <th>Triers</th>
                             <th>% Buy 40 Credits</th>
@@ -600,30 +606,7 @@
             
             <button class="add-row-btn" onclick="addInvestmentRow()">Add Period</button>
             <button class="export-btn" onclick="exportToCSV('investment')">Export Investment CSV</button>
-
-        );
-            } else if (sheetType === 'investment') {
-                filename = 'investment_data.csv';
-                csvContent = 'Period,Instantly Plan Cost,Google Workspace Cost,Domain Cost,Other Costs,Total Investment\n';
-                
-                investmentData.forEach(row => {
-                    csvContent += `${row.period},${row.instantly.toFixed(2)},${row.workspace.toFixed(2)},${row.domain.toFixed(2)},${row.other.toFixed(2)},${row.total.toFixed(2)}\n`;
-                });
-            }
-
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            
-            if (link.download !== undefined) {
-                const url = URL.createObjectURL(blob);
-                link.setAttribute('href', url);
-                link.setAttribute('download', filename);
-                link.style.visibility = 'hidden';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            }
-        }
+     
         </div>
 
         <!-- ROI Dashboard Sheet -->
@@ -789,6 +772,8 @@
                     emailsSent: weekData.emails,
                     responseRate: 0.02, // 2% from document
                     responses: 0,
+                    ctaClickRate: 0.15, // 15% of opened emails click CTA
+                    ctaClicks: 0,
                     tryRate: 0.3, // Estimated - you can adjust
                     triers: 0,
                     buy40Rate: 0.15, // Estimated - you can adjust
@@ -854,6 +839,8 @@
                     <td class="editable"><input type="number" value="${row.emailsSent}" onchange="updateCampaignData(${index}, 'emailsSent', this.value)"></td>
                     <td class="editable"><input type="number" step="0.001" value="${row.responseRate}" onchange="updateCampaignData(${index}, 'responseRate', this.value)"></td>
                     <td class="calculated">${Math.round(row.responses)}</td>
+                    <td class="editable"><input type="number" step="0.001" value="${row.ctaClickRate}" onchange="updateCampaignData(${index}, 'ctaClickRate', this.value)"></td>
+                    <td class="calculated">${Math.round(row.ctaClicks)}</td>
                     <td class="editable"><input type="number" step="0.001" value="${row.tryRate}" onchange="updateCampaignData(${index}, 'tryRate', this.value)"></td>
                     <td class="calculated">${Math.round(row.triers)}</td>
                     <td class="editable"><input type="number" step="0.001" value="${row.buy40Rate}" onchange="updateCampaignData(${index}, 'buy40Rate', this.value)"></td>
@@ -909,7 +896,8 @@
         function calculateCampaignRow(index) {
             const row = campaignData[index];
             row.responses = row.emailsSent * row.responseRate;
-            row.triers = row.responses * row.tryRate;
+            row.ctaClicks = row.responses * row.ctaClickRate;
+            row.triers = row.ctaClicks * row.tryRate;
             row.buyers40 = row.triers * row.buy40Rate;
             row.revenue40 = row.buyers40 * 11.50;
             row.buyers60 = row.triers * row.buy60Rate;
@@ -981,6 +969,8 @@
                 emailsSent: 0,
                 responseRate: 0.02,
                 responses: 0,
+                ctaClickRate: 0.15,
+                ctaClicks: 0,
                 tryRate: 0.3,
                 triers: 0,
                 buy40Rate: 0.15,
@@ -1073,10 +1063,10 @@
 
             if (sheetType === 'campaign') {
                 filename = 'campaign_data.csv';
-                csvContent = 'Week,Date,Emails Sent,Response Rate,Responses,Try Rate,Triers,Buy 40 Rate,40 Credit Buyers,40 Credit Revenue,Buy 60 Rate,60 Credit Buyers,60 Credit Revenue,Total Revenue\n';
+                csvContent = 'Week,Date,Emails Sent,Opened Emails Rate,Opened Emails,CTA Click Rate,CTA Clicks,Try Rate,Triers,Buy 40 Rate,40 Credit Buyers,40 Credit Revenue,Buy 60 Rate,60 Credit Buyers,60 Credit Revenue,Total Revenue\n';
                 
                 campaignData.forEach(row => {
-                    csvContent += `${row.week},${row.date},${row.emailsSent},${row.responseRate},${row.responses.toFixed(2)},${row.tryRate},${row.triers.toFixed(2)},${row.buy40Rate},${row.buyers40.toFixed(2)},${row.revenue40.toFixed(2)},${row.buy60Rate},${row.buyers60.toFixed(2)},${row.revenue60.toFixed(2)},${row.totalRevenue.toFixed(2)}\n`;
+                    csvContent += `${row.week},${row.date},${row.emailsSent},${row.responseRate},${row.responses.toFixed(2)},${row.ctaClickRate},${row.ctaClicks.toFixed(2)},${row.tryRate},${row.triers.toFixed(2)},${row.buy40Rate},${row.buyers40.toFixed(2)},${row.revenue40.toFixed(2)},${row.buy60Rate},${row.buyers60.toFixed(2)},${row.revenue60.toFixed(2)},${row.totalRevenue.toFixed(2)}\n`;
                 });
             } else if (sheetType === 'investment') {
                 filename = 'investment_data.csv';
@@ -1103,12 +1093,14 @@
 
         function applyBulkRates() {
             const responseRate = parseFloat(document.getElementById('bulkResponseRate').value);
+            const ctaClickRate = parseFloat(document.getElementById('bulkCtaClickRate').value);
             const tryRate = parseFloat(document.getElementById('bulkTryRate').value);
             const buy40Rate = parseFloat(document.getElementById('bulkBuy40Rate').value);
             const buy60Rate = parseFloat(document.getElementById('bulkBuy60Rate').value);
 
             campaignData.forEach((row, index) => {
                 if (!isNaN(responseRate)) row.responseRate = responseRate;
+                if (!isNaN(ctaClickRate)) row.ctaClickRate = ctaClickRate;
                 if (!isNaN(tryRate)) row.tryRate = tryRate;
                 if (!isNaN(buy40Rate)) row.buy40Rate = buy40Rate;
                 if (!isNaN(buy60Rate)) row.buy60Rate = buy60Rate;
@@ -1121,6 +1113,7 @@
 
             // Clear the bulk input fields
             document.getElementById('bulkResponseRate').value = '';
+            document.getElementById('bulkCtaClickRate').value = '';
             document.getElementById('bulkTryRate').value = '';
             document.getElementById('bulkBuy40Rate').value = '';
             document.getElementById('bulkBuy60Rate').value = '';
@@ -1150,10 +1143,10 @@
 
             // Create combined CSV export
             let csvContent = 'CAMPAIGN DATA\n';
-            csvContent += 'Week,Date,Emails Sent,Response Rate,Responses,Try Rate,Triers,Buy 40 Rate,40 Credit Buyers,40 Credit Revenue,Buy 60 Rate,60 Credit Buyers,60 Credit Revenue,Total Revenue\n';
+            csvContent += 'Week,Date,Emails Sent,Opened Emails Rate,Opened Emails,CTA Click Rate,CTA Clicks,Try Rate,Triers,Buy 40 Rate,40 Credit Buyers,40 Credit Revenue,Buy 60 Rate,60 Credit Buyers,60 Credit Revenue,Total Revenue\n';
             
             campaignData.forEach(row => {
-                csvContent += `${row.week},${row.date},${row.emailsSent},${row.responseRate},${row.responses.toFixed(2)},${row.tryRate},${row.triers.toFixed(2)},${row.buy40Rate},${row.buyers40.toFixed(2)},${row.revenue40.toFixed(2)},${row.buy60Rate},${row.buyers60.toFixed(2)},${row.revenue60.toFixed(2)},${row.totalRevenue.toFixed(2)}\n`;
+                csvContent += `${row.week},${row.date},${row.emailsSent},${row.responseRate},${row.responses.toFixed(2)},${row.ctaClickRate},${row.ctaClicks.toFixed(2)},${row.tryRate},${row.triers.toFixed(2)},${row.buy40Rate},${row.buyers40.toFixed(2)},${row.revenue40.toFixed(2)},${row.buy60Rate},${row.buyers60.toFixed(2)},${row.revenue60.toFixed(2)},${row.totalRevenue.toFixed(2)}\n`;
             });
 
             csvContent += '\n\nINVESTMENT DATA\n';
