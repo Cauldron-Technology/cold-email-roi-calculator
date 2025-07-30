@@ -198,6 +198,225 @@
             margin-bottom: 5px;
         }
 
+        /* Enhanced Dashboard Styles */
+        .recurrent-settings {
+            background: linear-gradient(145deg, #fef3c7, #fde68a);
+            border: 1px solid #f59e0b;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .recurrent-settings h3 {
+            margin: 0 0 15px 0;
+            color: #92400e;
+            font-size: 1.2em;
+        }
+
+        .recurrent-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-group label {
+            font-weight: 600;
+            color: #92400e;
+            font-size: 0.9em;
+        }
+
+        .input-with-suffix {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .input-group input {
+            padding: 8px 12px;
+            border: 2px solid #f59e0b;
+            border-radius: 6px;
+            font-size: 1em;
+            background: white;
+            width: 80px;
+            text-align: center;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #d97706;
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+        }
+
+        .input-suffix {
+            font-size: 0.9em;
+            color: #92400e;
+            font-weight: 500;
+            min-width: 60px;
+        }
+
+        /* Dashboard Sections */
+        .dashboard-section {
+            margin-bottom: 30px;
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+        }
+
+        .section-title {
+            margin: 0 0 20px 0;
+            color: #1e293b;
+            font-size: 1.3em;
+            font-weight: 600;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+
+        .metrics-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .metric-card {
+            background: linear-gradient(145deg, #ffffff, #f8fafc);
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            flex: 1;
+            min-width: 180px;
+        }
+
+        .metric-percentage {
+            font-size: 0.85em;
+            color: #64748b;
+            font-weight: 500;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        .metric-card.funnel {
+            background: linear-gradient(145deg, #e0f2fe, #b3e5fc);
+            border: 1px solid #0288d1;
+            color: #01579b;
+        }
+
+        .metric-card.financial {
+            background: linear-gradient(145deg, #f3e5f5, #e1bee7);
+            border: 1px solid #8e24aa;
+            color: #4a148c;
+        }
+
+        .metric-card.recurrent {
+            background: linear-gradient(145deg, #e8f5e8, #c8e6c9);
+            border: 1px solid #4caf50;
+            color: #1b5e20;
+        }
+
+        .metric-card.comparison {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card.comparison.original {
+            background: linear-gradient(145deg, #fff3e0, #ffe0b2);
+            border: 1px solid #ff9800;
+            color: #e65100;
+        }
+
+        .metric-card.comparison.enhanced {
+            background: linear-gradient(145deg, #e8f5e8, #c8e6c9);
+            border: 2px solid #4caf50;
+            color: #1b5e20;
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+        }
+
+        .metric-card.comparison.enhanced::before {
+            content: '✨';
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            font-size: 1.2em;
+            opacity: 0.7;
+        }
+
+        /* ROI Comparison Layout */
+        .roi-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .roi-column {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .column-title {
+            text-align: center;
+            margin: 0 0 10px 0;
+            color: #64748b;
+            font-size: 1.1em;
+            font-weight: 600;
+            padding: 10px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .roi-column .metric-card {
+            margin: 0;
+        }
+
+        @media (max-width: 1200px) {
+            .metrics-row {
+                justify-content: center;
+            }
+            
+            .metric-card {
+                min-width: 160px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .recurrent-inputs {
+                grid-template-columns: 1fr;
+            }
+            
+            .roi-comparison {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .metrics-row {
+                flex-direction: column;
+            }
+            
+            .metric-card {
+                min-width: auto;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .dashboard-section {
+                padding: 15px;
+            }
+            
+            .section-title {
+                font-size: 1.1em;
+            }
+        }
+
         .metric-label {
             color: #64748b;
             font-size: 0.9em;
@@ -220,6 +439,12 @@
             border-radius: 15px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
             border: 1px solid #e2e8f0;
+            height: 400px; /* Fixed height instead of auto */
+        }
+
+        .chart-container canvas {
+            max-height: 300px !important;
+            height: 300px !important;
         }
 
         .chart-header {
@@ -697,38 +922,123 @@
                 📊 Live summary pulling data from Campaign Calculator and Investment Tracker sheets.
             </div>
             
-            <div class="dashboard-grid">
-                <div class="metric-card">
-                    <div class="metric-value" id="totalEmailsSent">0</div>
-                    <div class="metric-label">Total Emails Sent</div>
+            <!-- Campaign Performance Funnel -->
+            <div class="dashboard-section">
+                <h3 class="section-title">📧 Campaign Performance Funnel</h3>
+                <div class="metrics-row">
+                    <div class="metric-card funnel">
+                        <div class="metric-value" id="totalEmailsSent">0</div>
+                        <div class="metric-label">Total Emails Sent</div>
+                    </div>
+                    <div class="metric-card funnel">
+                        <div class="metric-value" id="totalEmailsOpened">0</div>
+                        <div class="metric-label">Total Emails Opened</div>
+                    </div>
+                    <div class="metric-card funnel">
+                        <div class="metric-value" id="totalCtaClicks">0</div>
+                        <div class="metric-label">Total CTA Clicks</div>
+                    </div>
+                    <div class="metric-card funnel">
+                        <div class="metric-value" id="totalTriers">0</div>
+                        <div class="metric-label">Total Triers</div>
+                    </div>
+                    <div class="metric-card funnel">
+                        <div class="metric-value" id="totalBuyers">0</div>
+                        <div class="metric-label">Total Buyers</div>
+                        <div class="metric-percentage" id="buyerConversionRate">0.00%</div>
+                    </div>
                 </div>
-                <div class="metric-card">
-                    <div class="metric-value" id="totalResponses">0</div>
-                    <div class="metric-label">Total Responses</div>
+            </div>
+            
+            <!-- Financial Overview -->
+            <div class="dashboard-section">
+                <h3 class="section-title">💰 Financial Overview</h3>
+                <div class="metrics-row">
+                    <div class="metric-card financial">
+                        <div class="metric-value" id="totalInvestmentDash">$0</div>
+                        <div class="metric-label">Total Investment</div>
+                    </div>
+                    <div class="metric-card financial">
+                        <div class="metric-value" id="initialRevenue">$0</div>
+                        <div class="metric-label">Initial Revenue</div>
+                    </div>
+                    <div class="metric-card financial">
+                        <div class="metric-value" id="recurrentRevenue">$0</div>
+                        <div class="metric-label">Recurrent Revenue</div>
+                    </div>
+                    <div class="metric-card financial">
+                        <div class="metric-value" id="totalRevenue">$0</div>
+                        <div class="metric-label">Total Revenue (Initial + Recurrent)</div>
+                    </div>
                 </div>
-                <div class="metric-card">
-                    <div class="metric-value" id="totalTriers">0</div>
-                    <div class="metric-label">Total Triers</div>
+            </div>
+            
+            <!-- Recurrent Buyer Settings -->
+            <div class="recurrent-settings">
+                <h3>🔄 Recurrent Buyer Settings</h3>
+                <div class="recurrent-inputs">
+                    <div class="input-group">
+                        <label for="recurrentBuyerRate">% of buyers who will buy again:</label>
+                        <div class="input-with-suffix">
+                            <input type="number" id="recurrentBuyerRate" min="0" max="100" step="1" value="20" onchange="updateDashboard()" oninput="updateDashboard()">
+                            <span class="input-suffix">%</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="avgAdditionalPurchases">Average additional purchases per recurrent buyer:</label>
+                        <div class="input-with-suffix">
+                            <input type="number" id="avgAdditionalPurchases" min="0" step="0.1" value="2.5" onchange="updateDashboard()" oninput="updateDashboard()">
+                            <span class="input-suffix">purchases</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="metric-card">
-                    <div class="metric-value" id="totalBuyers">0</div>
-                    <div class="metric-label">Total Buyers</div>
+            </div>
+            
+            <!-- Recurrent Buyer Analysis -->
+            <div class="dashboard-section">
+                <h3 class="section-title">🔄 Recurrent Buyer Analysis</h3>
+                <div class="metrics-row">
+                    <div class="metric-card recurrent">
+                        <div class="metric-value" id="recurrentBuyers">0</div>
+                        <div class="metric-label">Recurrent Buyers</div>
+                    </div>
+                    <div class="metric-card recurrent">
+                        <div class="metric-value" id="customerLifetimeValue">$0</div>
+                        <div class="metric-label">Customer Lifetime Value</div>
+                    </div>
+                    <div class="metric-card recurrent">
+                        <div class="metric-value" id="paybackPeriod">N/A</div>
+                        <div class="metric-label">Payback Period</div>
+                    </div>
                 </div>
-                <div class="metric-card">
-                    <div class="metric-value" id="totalRevenue">$0</div>
-                    <div class="metric-label">Total Revenue</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-value" id="totalInvestmentDash">$0</div>
-                    <div class="metric-label">Total Investment</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-value" id="netProfit">$0</div>
-                    <div class="metric-label">Net Profit/Loss</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-value" id="roiPercent">0%</div>
-                    <div class="metric-label">ROI Percentage</div>
+            </div>
+            
+            <!-- ROI Comparison -->
+            <div class="dashboard-section">
+                <h3 class="section-title">📈 ROI Comparison: Original vs With Recurrent Buyers</h3>
+                <div class="roi-comparison">
+                    <div class="roi-column">
+                        <h4 class="column-title">Original Campaign</h4>
+                        <div class="metric-card comparison original">
+                            <div class="metric-value" id="netProfit">$0</div>
+                            <div class="metric-label">Net Profit/Loss</div>
+                        </div>
+                        <div class="metric-card comparison original">
+                            <div class="metric-value" id="roiPercent">0%</div>
+                            <div class="metric-label">ROI Percentage</div>
+                        </div>
+                    </div>
+                    <div class="roi-column">
+                        <h4 class="column-title">With Recurrent Buyers ✨</h4>
+                        <div class="metric-card comparison enhanced">
+                            <div class="metric-value" id="netProfitEnhanced">$0</div>
+                            <div class="metric-label">Net Profit/Loss</div>
+                        </div>
+                        <div class="metric-card comparison enhanced">
+                            <div class="metric-value" id="roiPercentEnhanced">0%</div>
+                            <div class="metric-label">ROI Percentage</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -793,14 +1103,27 @@
                     <canvas id="revenueVsInvestmentChart" width="400" height="250"></canvas>
                 </div>
                 
-                <div class="chart-container">
-                    <div class="chart-header">
-                        <div>
-                            <h3 class="chart-title">Conversion Funnel</h3>
-                            <p class="chart-subtitle">Campaign performance at each stage</p>
+                <!-- Conversion Funnel Charts - Two side by side -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 25px;">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <div>
+                                <h3 class="chart-title">Conversion Funnel including emails sent</h3>
+                                <p class="chart-subtitle">Complete campaign performance at each stage</p>
+                            </div>
                         </div>
+                        <canvas id="funnelChart" width="400" height="300"></canvas>
                     </div>
-                    <canvas id="funnelChart" width="400" height="300"></canvas>
+                    
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <div>
+                                <h3 class="chart-title">Post-Open Conversion Funnel</h3>
+                                <p class="chart-subtitle">Conversion rates after email opening</p>
+                            </div>
+                        </div>
+                        <canvas id="postOpenFunnelChart" width="400" height="300"></canvas>
+                    </div>
                 </div>
             </div>
             
@@ -851,16 +1174,16 @@
                     week: weekData.week,
                     date: startDate.toISOString().split('T')[0],
                     emailsSent: weekData.emails,
-                    responseRate: 0.02, // 2% from document
+                    responseRate: 0.20, // 20% Open Rate
                     responses: 0,
-                    ctaClickRate: 0.15, // 15% of opened emails click CTA
+                    ctaClickRate: 0.08, // 8% CTA Click Rate
                     ctaClicks: 0,
-                    tryRate: 0.3, // Estimated - you can adjust
+                    tryRate: 0.25, // 25% Try Product Rate
                     triers: 0,
-                    buy40Rate: 0.15, // Estimated - you can adjust
+                    buy40Rate: 0.15, // 15% Buy 40 Credits
                     buyers40: 0,
                     revenue40: 0,
-                    buy60Rate: 0.1, // Estimated - you can adjust
+                    buy60Rate: 0.10, // 10% Buy 60 Credits
                     buyers60: 0,
                     revenue60: 0,
                     totalRevenue: 0
@@ -1023,43 +1346,106 @@
         }
 
         function updateDashboard() {
-            const currentDate = new Date();
-            
-            // Filter campaign data by date (only past and current weeks)
-            const activeCampaignData = campaignData.filter(row => {
-                const rowDate = new Date(row.date);
-                return rowDate <= currentDate;
-            });
-
-            // For debugging - temporarily show all data regardless of date
+            // Calculate totals from all campaign data
             const totals = campaignData.reduce((acc, row) => {
                 acc.emailsSent += row.emailsSent;
                 acc.responses += row.responses;
+                acc.ctaClicks += row.ctaClicks;
                 acc.triers += row.triers;
                 acc.buyers40 += row.buyers40;
                 acc.buyers60 += row.buyers60;
                 acc.revenue += row.totalRevenue;
                 return acc;
-            }, { emailsSent: 0, responses: 0, triers: 0, buyers40: 0, buyers60: 0, revenue: 0 });
+            }, { emailsSent: 0, responses: 0, ctaClicks: 0, triers: 0, buyers40: 0, buyers60: 0, revenue: 0 });
 
             const totalInvestment = investmentData.reduce((sum, row) => sum + row.total, 0);
+            const totalBuyers = totals.buyers40 + totals.buyers60;
+            
+            // Get recurrent buyer settings
+            const recurrentBuyerRate = parseFloat(document.getElementById('recurrentBuyerRate').value) || 0;
+            const avgAdditionalPurchases = parseFloat(document.getElementById('avgAdditionalPurchases').value) || 0;
+            
+            // Calculate recurrent buyer metrics
+            const recurrentBuyers = Math.round(totalBuyers * (recurrentBuyerRate / 100));
+            const totalAdditionalPurchases = recurrentBuyers * avgAdditionalPurchases;
+            
+            // Calculate average package price from current data
+            const avgPackagePrice = totalBuyers > 0 ? (totals.revenue / totalBuyers) : 12.625; // Default average between $11.50 and $14.75
+            
+            // Calculate recurrent revenue
+            const recurrentRevenue = totalAdditionalPurchases * avgPackagePrice;
+            const totalRevenueWithRecurrent = totals.revenue + recurrentRevenue;
+            
+            // Calculate Customer Lifetime Value
+            const customerLifetimeValue = totalBuyers > 0 ? (totalRevenueWithRecurrent / totalBuyers) : 0;
+            
+            // Calculate original and enhanced ROI metrics
             const netProfit = totals.revenue - totalInvestment;
+            const netProfitEnhanced = totalRevenueWithRecurrent - totalInvestment;
             const roiPercent = totalInvestment > 0 ? (netProfit / totalInvestment * 100) : 0;
+            const roiPercentEnhanced = totalInvestment > 0 ? (netProfitEnhanced / totalInvestment * 100) : 0;
+            
+            // Calculate payback period (in weeks)
+            let paybackPeriod = 'N/A';
+            if (totalRevenueWithRecurrent > totalInvestment) {
+                // Simplified calculation: assume revenue is distributed over 12 weeks
+                const weeklyRevenue = totalRevenueWithRecurrent / 12;
+                if (weeklyRevenue > 0) {
+                    paybackPeriod = Math.ceil(totalInvestment / weeklyRevenue) + ' weeks';
+                }
+            }
 
+            // Update basic campaign metrics
             document.getElementById('totalEmailsSent').textContent = Math.round(totals.emailsSent).toLocaleString();
-            document.getElementById('totalResponses').textContent = Math.round(totals.responses).toLocaleString();
+            document.getElementById('totalEmailsOpened').textContent = Math.round(totals.responses).toLocaleString();
+            document.getElementById('totalCtaClicks').textContent = Math.round(totals.ctaClicks).toLocaleString();
             document.getElementById('totalTriers').textContent = Math.round(totals.triers).toLocaleString();
-            document.getElementById('totalBuyers').textContent = Math.round(totals.buyers40 + totals.buyers60).toLocaleString();
-            document.getElementById('totalRevenue').textContent = `$${totals.revenue.toFixed(0)}`;
+            
+            // Calculate and display buyer conversion percentage
+            const buyerConversionRate = totals.emailsSent > 0 ? (totalBuyers / totals.emailsSent * 100) : 0;
+            document.getElementById('totalBuyers').textContent = Math.round(totalBuyers).toLocaleString();
+            document.getElementById('buyerConversionRate').textContent = `${buyerConversionRate.toFixed(2)}%`;
+            
+            // Update financial metrics - initial
+            document.getElementById('initialRevenue').textContent = `$${totals.revenue.toFixed(0)}`;
             document.getElementById('totalInvestmentDash').textContent = `$${totalInvestment.toFixed(0)}`;
+            document.getElementById('customerLifetimeValue').textContent = `$${customerLifetimeValue.toFixed(2)}`;
             
-            const netProfitEl = document.getElementById('netProfit');
-            netProfitEl.textContent = `$${netProfit.toFixed(0)}`;
-            netProfitEl.className = `metric-value ${netProfit >= 0 ? 'positive' : 'negative'}`;
+            // Update recurrent buyer metrics
+            document.getElementById('recurrentBuyers').textContent = Math.round(recurrentBuyers).toLocaleString();
+            document.getElementById('recurrentRevenue').textContent = `$${recurrentRevenue.toFixed(0)}`;
+            document.getElementById('totalRevenue').textContent = `$${totalRevenueWithRecurrent.toFixed(0)}`;
+            document.getElementById('paybackPeriod').textContent = paybackPeriod;
             
-            const roiEl = document.getElementById('roiPercent');
-            roiEl.textContent = `${roiPercent.toFixed(1)}%`;
-            roiEl.className = `metric-value ${roiPercent >= 0 ? 'positive' : 'negative'}`;
+            // Update ROI comparison
+            document.getElementById('netProfit').textContent = `$${netProfit.toFixed(0)}`;
+            document.getElementById('netProfitEnhanced').textContent = `$${netProfitEnhanced.toFixed(0)}`;
+            document.getElementById('roiPercent').textContent = `${roiPercent.toFixed(1)}%`;
+            document.getElementById('roiPercentEnhanced').textContent = `${roiPercentEnhanced.toFixed(1)}%`;
+            
+            // Update color coding for ROI metrics
+            const roiElement = document.getElementById('roiPercent');
+            const roiEnhancedElement = document.getElementById('roiPercentEnhanced');
+            const netProfitElement = document.getElementById('netProfit');
+            const netProfitEnhancedElement = document.getElementById('netProfitEnhanced');
+            
+            // Color coding for original metrics
+            if (roiPercent > 0) {
+                roiElement.style.color = '#1b5e20';
+                netProfitElement.style.color = '#1b5e20';
+            } else {
+                roiElement.style.color = '#d32f2f';
+                netProfitElement.style.color = '#d32f2f';
+            }
+            
+            // Color coding for enhanced metrics
+            if (roiPercentEnhanced > 0) {
+                roiEnhancedElement.style.color = '#1b5e20';
+                netProfitEnhancedElement.style.color = '#1b5e20';
+            } else {
+                roiEnhancedElement.style.color = '#d32f2f';
+                netProfitEnhancedElement.style.color = '#d32f2f';
+            }
         }
 
         function addCampaignRow() {
@@ -1071,16 +1457,16 @@
                 week: newWeek,
                 date: lastDate.toISOString().split('T')[0],
                 emailsSent: 0,
-                responseRate: 0.02,
+                responseRate: 0.20,
                 responses: 0,
-                ctaClickRate: 0.15,
+                ctaClickRate: 0.08,
                 ctaClicks: 0,
-                tryRate: 0.3,
+                tryRate: 0.25,
                 triers: 0,
                 buy40Rate: 0.15,
                 buyers40: 0,
                 revenue40: 0,
-                buy60Rate: 0.1,
+                buy60Rate: 0.10,
                 buyers60: 0,
                 revenue60: 0,
                 totalRevenue: 0
@@ -1150,7 +1536,7 @@
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: true,
+                    maintainAspectRatio: false,
                     plugins: {
                         title: {
                             display: true,
@@ -1210,6 +1596,270 @@
                     }
                 }
             });
+
+            // Progress bars update
+            updateProgressBars();
+
+            // Conversion Funnel Chart (including emails sent)
+            const funnelData = calculateFunnelData();
+            const ctx2 = document.getElementById('funnelChart').getContext('2d');
+            charts.funnel = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Emails Sent', 'Opened', 'CTA Clicks', 'Triers', 'Buyers'],
+                    datasets: [{
+                        data: [
+                            funnelData.emailsSent,
+                            funnelData.opened,
+                            funnelData.ctaClicks,
+                            funnelData.triers,
+                            funnelData.buyers
+                        ],
+                        backgroundColor: [
+                            '#e2e8f0',
+                            '#94a3b8',
+                            '#64748b',
+                            '#475569',
+                            '#334155'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Conversion Funnel including emails sent'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label;
+                                    const value = context.raw;
+                                    const total = funnelData.emailsSent;
+                                    const percentage = ((value / total) * 100).toFixed(1);
+                                    return `${label}: ${value.toLocaleString()} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Post-Open Conversion Funnel Chart
+            const postOpenData = calculatePostOpenFunnelData();
+            const ctx2b = document.getElementById('postOpenFunnelChart').getContext('2d');
+            charts.postOpenFunnel = new Chart(ctx2b, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Opened', 'CTA Clicks', 'Triers', 'Buyers'],
+                    datasets: [{
+                        data: [
+                            postOpenData.opened,
+                            postOpenData.ctaClicks,
+                            postOpenData.triers,
+                            postOpenData.buyers
+                        ],
+                        backgroundColor: [
+                            '#94a3b8',
+                            '#64748b',
+                            '#475569',
+                            '#334155'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Post-Open Conversion Funnel'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label;
+                                    const value = context.raw;
+                                    const total = postOpenData.opened;
+                                    const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : '0.0';
+                                    return `${label}: ${value.toLocaleString()} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Cumulative Performance Chart
+            const cumulativeData = calculateCumulativeData();
+            const ctx3 = document.getElementById('cumulativeChart').getContext('2d');
+            charts.cumulative = new Chart(ctx3, {
+                type: 'line',
+                data: {
+                    labels: weeks,
+                    datasets: [{
+                        label: 'Cumulative Revenue',
+                        data: cumulativeData.revenue,
+                        borderColor: '#11998e',
+                        backgroundColor: 'rgba(17, 153, 142, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    }, {
+                        label: 'Cumulative Investment',
+                        data: cumulativeData.investment,
+                        borderColor: '#ef4444',
+                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    }, {
+                        label: 'Cumulative Profit',
+                        data: cumulativeData.profit,
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Cumulative Performance Over Time'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    }
+                }
+            });
+        }
+
+        function calculateFunnelData() {
+            const totals = campaignData.reduce((acc, row) => {
+                acc.emailsSent += row.emailsSent;
+                acc.opened += row.responses;
+                acc.ctaClicks += row.ctaClicks;
+                acc.triers += row.triers;
+                acc.buyers += (row.buyers40 + row.buyers60);
+                return acc;
+            }, { emailsSent: 0, opened: 0, ctaClicks: 0, triers: 0, buyers: 0 });
+
+            return totals;
+        }
+
+        function calculatePostOpenFunnelData() {
+            const totals = campaignData.reduce((acc, row) => {
+                acc.opened += row.responses;
+                acc.ctaClicks += row.ctaClicks;
+                acc.triers += row.triers;
+                acc.buyers += (row.buyers40 + row.buyers60);
+                return acc;
+            }, { opened: 0, ctaClicks: 0, triers: 0, buyers: 0 });
+
+            return totals;
+        }
+
+        function calculateCumulativeData() {
+            let cumulativeRevenue = 0;
+            let cumulativeInvestment = 0;
+            
+            const revenue = [];
+            const investment = [];
+            const profit = [];
+
+            campaignData.forEach((row, index) => {
+                cumulativeRevenue += row.totalRevenue;
+                
+                // Add investment at the start of each month
+                const weekNumber = row.week;
+                if (weekNumber === 1 || weekNumber === 5 || weekNumber === 9) {
+                    const monthIndex = Math.floor(index / 4);
+                    if (investmentData[monthIndex]) {
+                        cumulativeInvestment += investmentData[monthIndex].total;
+                    }
+                }
+                
+                revenue.push(cumulativeRevenue);
+                investment.push(cumulativeInvestment);
+                profit.push(cumulativeRevenue - cumulativeInvestment);
+            });
+
+            return { revenue, investment, profit };
+        }
+
+        function updateProgressBars() {
+            const totalRevenue = campaignData.reduce((sum, row) => sum + row.totalRevenue, 0);
+            const totalInvestment = investmentData.reduce((sum, row) => sum + row.total, 0);
+            
+            // Update the visualization cards
+            const totalInvestmentViz = document.getElementById('totalInvestmentViz');
+            const totalRevenueViz = document.getElementById('totalRevenueViz');
+            if (totalInvestmentViz) totalInvestmentViz.textContent = `$${totalInvestment.toFixed(0)}`;
+            if (totalRevenueViz) totalRevenueViz.textContent = `$${totalRevenue.toFixed(0)}`;
+            
+            // Update progress bar labels
+            const investmentAmount = document.getElementById('investmentAmount');
+            const revenueAmount = document.getElementById('revenueAmount');
+            if (investmentAmount) investmentAmount.textContent = `$${totalInvestment.toFixed(0)}`;
+            if (revenueAmount) revenueAmount.textContent = `$${totalRevenue.toFixed(0)}`;
+            
+            // Calculate progress percentages (assuming a target or max value)
+            const maxValue = Math.max(totalRevenue, totalInvestment, 1000); // Minimum 1000 for scaling
+            const revenuePercent = (totalRevenue / maxValue) * 100;
+            const investmentPercent = (totalInvestment / maxValue) * 100;
+
+            // Update progress bars
+            const revenueBar = document.querySelector('.progress-fill.revenue');
+            const investmentBar = document.querySelector('.progress-fill.investment');
+            
+            if (revenueBar) {
+                revenueBar.style.width = `${revenuePercent}%`;
+            }
+            
+            if (investmentBar) {
+                investmentBar.style.width = `${investmentPercent}%`;
+            }
+
+            // Update ROI indicator
+            const netProfit = totalRevenue - totalInvestment;
+            const roiPercent = totalInvestment > 0 ? (netProfit / totalInvestment * 100) : 0;
+            const roiIndicator = document.querySelector('.roi-indicator');
+            
+            if (roiIndicator) {
+                roiIndicator.className = `roi-indicator ${roiPercent > 0 ? 'positive' : roiPercent < 0 ? 'negative' : 'neutral'}`;
+                roiIndicator.innerHTML = `ROI: ${roiPercent.toFixed(1)}% | Net Profit: $${netProfit.toFixed(0)}`;
+            }
         }
 
         function exportToCSV(sheetType) {
