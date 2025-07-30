@@ -596,23 +596,23 @@
                 <div class="bulk-input-grid">
                                     <div class="bulk-input-group">
                     <label>Opened Emails Rate (%)</label>
-                    <input type="number" id="bulkResponseRate" step="0.001" placeholder="e.g., 0.02 for 2%">
+                    <input type="number" id="bulkResponseRate" step="0.1" placeholder="e.g., 2 for 2%">
                 </div>
                 <div class="bulk-input-group">
                     <label>CTA Click Rate (%)</label>
-                    <input type="number" id="bulkCtaClickRate" step="0.001" placeholder="e.g., 0.15 for 15%">
+                    <input type="number" id="bulkCtaClickRate" step="0.1" placeholder="e.g., 15 for 15%">
                 </div>
                 <div class="bulk-input-group">
                     <label>% Try Product</label>
-                    <input type="number" id="bulkTryRate" step="0.001" placeholder="e.g., 0.3 for 30%">
+                    <input type="number" id="bulkTryRate" step="0.1" placeholder="e.g., 30 for 30%">
                 </div>
                 <div class="bulk-input-group">
                     <label>% Buy 40 Credits</label>
-                    <input type="number" id="bulkBuy40Rate" step="0.001" placeholder="e.g., 0.15 for 15%">
+                    <input type="number" id="bulkBuy40Rate" step="0.1" placeholder="e.g., 15 for 15%">
                 </div>
                 <div class="bulk-input-group">
                     <label>% Buy 60 Credits</label>
-                    <input type="number" id="bulkBuy60Rate" step="0.001" placeholder="e.g., 0.1 for 10%">
+                    <input type="number" id="bulkBuy60Rate" step="0.1" placeholder="e.g., 10 for 10%">
                 </div>
                 </div>
                 <button class="bulk-apply-btn" onclick="applyBulkRates()">Apply to All Weeks</button>
@@ -918,16 +918,16 @@
                     <td>${row.week}</td>
                     <td><input type="date" class="editable" value="${row.date}" onchange="updateCampaignData(${index}, 'date', this.value)"></td>
                     <td class="editable"><input type="number" value="${row.emailsSent}" onchange="updateCampaignData(${index}, 'emailsSent', this.value)"></td>
-                    <td class="editable"><input type="number" step="0.001" value="${row.responseRate}" onchange="updateCampaignData(${index}, 'responseRate', this.value)"></td>
+                    <td class="editable"><input type="number" step="0.1" value="${(row.responseRate * 100).toFixed(1)}" onchange="updateCampaignData(${index}, 'responseRate', this.value / 100)"></td>
                     <td class="calculated">${Math.round(row.responses)}</td>
-                    <td class="editable"><input type="number" step="0.001" value="${row.ctaClickRate}" onchange="updateCampaignData(${index}, 'ctaClickRate', this.value)"></td>
+                    <td class="editable"><input type="number" step="0.1" value="${(row.ctaClickRate * 100).toFixed(1)}" onchange="updateCampaignData(${index}, 'ctaClickRate', this.value / 100)"></td>
                     <td class="calculated">${Math.round(row.ctaClicks)}</td>
-                    <td class="editable"><input type="number" step="0.001" value="${row.tryRate}" onchange="updateCampaignData(${index}, 'tryRate', this.value)"></td>
+                    <td class="editable"><input type="number" step="0.1" value="${(row.tryRate * 100).toFixed(1)}" onchange="updateCampaignData(${index}, 'tryRate', this.value / 100)"></td>
                     <td class="calculated">${Math.round(row.triers)}</td>
-                    <td class="editable"><input type="number" step="0.001" value="${row.buy40Rate}" onchange="updateCampaignData(${index}, 'buy40Rate', this.value)"></td>
+                    <td class="editable"><input type="number" step="0.1" value="${(row.buy40Rate * 100).toFixed(1)}" onchange="updateCampaignData(${index}, 'buy40Rate', this.value / 100)"></td>
                     <td class="calculated">${Math.round(row.buyers40)}</td>
                     <td class="calculated">$${row.revenue40.toFixed(2)}</td>
-                    <td class="editable"><input type="number" step="0.001" value="${row.buy60Rate}" onchange="updateCampaignData(${index}, 'buy60Rate', this.value)"></td>
+                    <td class="editable"><input type="number" step="0.1" value="${(row.buy60Rate * 100).toFixed(1)}" onchange="updateCampaignData(${index}, 'buy60Rate', this.value / 100)"></td>
                     <td class="calculated">${Math.round(row.buyers60)}</td>
                     <td class="calculated">$${row.revenue60.toFixed(2)}</td>
                     <td class="calculated ${row.totalRevenue > 500 ? 'high-performance' : row.totalRevenue > 0 ? '' : 'low-performance'}">$${row.totalRevenue.toFixed(2)}</td>
@@ -1173,11 +1173,11 @@
         }
 
         function applyBulkRates() {
-            const responseRate = parseFloat(document.getElementById('bulkResponseRate').value);
-            const ctaClickRate = parseFloat(document.getElementById('bulkCtaClickRate').value);
-            const tryRate = parseFloat(document.getElementById('bulkTryRate').value);
-            const buy40Rate = parseFloat(document.getElementById('bulkBuy40Rate').value);
-            const buy60Rate = parseFloat(document.getElementById('bulkBuy60Rate').value);
+            const responseRate = parseFloat(document.getElementById('bulkResponseRate').value) / 100;
+            const ctaClickRate = parseFloat(document.getElementById('bulkCtaClickRate').value) / 100;
+            const tryRate = parseFloat(document.getElementById('bulkTryRate').value) / 100;
+            const buy40Rate = parseFloat(document.getElementById('bulkBuy40Rate').value) / 100;
+            const buy60Rate = parseFloat(document.getElementById('bulkBuy60Rate').value) / 100;
 
             campaignData.forEach((row, index) => {
                 if (!isNaN(responseRate)) row.responseRate = responseRate;
